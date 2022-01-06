@@ -85,28 +85,28 @@ public class BodyManager : MonoBehaviour
 
             //Adds Direction Drives
             JointDrive XStandarddrive = newJoint.xDrive;
-            XStandarddrive.positionSpring = 10000;
+            XStandarddrive.positionSpring = 20000;
             newJoint.xDrive = XStandarddrive;
 
             JointDrive Ydrive = newJoint.yDrive;
-            Ydrive.positionSpring = 10000;
+            Ydrive.positionSpring = 20000;
             newJoint.yDrive = Ydrive;
 
             JointDrive Zdrive = newJoint.zDrive;
-            Zdrive.positionSpring = 10000;
+            Zdrive.positionSpring = 20000;
             newJoint.zDrive = Zdrive;
 
             //Adds angular limit springs in X,Y and Z directions
             SoftJointLimitSpring Xlimit = newJoint.angularXLimitSpring;
-            Xlimit.spring = 300;
+            Xlimit.spring = 1000;
             newJoint.angularXLimitSpring = Xlimit;
             SoftJointLimitSpring YZlimit = newJoint.angularYZLimitSpring;
-            YZlimit.spring = 300;
+            YZlimit.spring = 1000;
             newJoint.angularYZLimitSpring = YZlimit;
 
             // Adds linear limit spring to the joint
             SoftJointLimitSpring limit = newJoint.linearLimitSpring;
-            limit.spring = 150;
+            limit.spring = 1000;
             newJoint.linearLimitSpring = limit;
             return newJoint;
 
@@ -115,9 +115,9 @@ public class BodyManager : MonoBehaviour
         {
             ConfigurableJoint newJoint = joint;
             newJoint.connectedBody = limbToAttach;
-            newJoint.xMotion = ConfigurableJointMotion.Free;
-            newJoint.yMotion = ConfigurableJointMotion.Free;
-            newJoint.zMotion = ConfigurableJointMotion.Free;
+            newJoint.xMotion = ConfigurableJointMotion.Locked;
+            newJoint.yMotion = ConfigurableJointMotion.Locked;
+            newJoint.zMotion = ConfigurableJointMotion.Locked;
 
             newJoint.autoConfigureConnectedAnchor = true;
 

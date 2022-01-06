@@ -16,8 +16,8 @@ public class TerrainGenerator : MonoBehaviour
         }
         else
         {
-            GameObject plane = GameObject.Find("Plane");
-            plane.SetActive(false);
+            GameObject flatTerrain = GameObject.Find("Flat");
+            flatTerrain.SetActive(false);
             GameObject baseTerrain = GameObject.Find("Terrain");
             baseTerrain.transform.position = new Vector3 (-128, -10, -128);
             int newRandomX = UnityEngine.Random.Range(-20, 20);
