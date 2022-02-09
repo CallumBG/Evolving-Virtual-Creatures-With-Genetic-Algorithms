@@ -8,9 +8,9 @@ public class BodyManager : MonoBehaviour
     public static void ScaleBodyRandomly(GameObject body, Creature creature)
     {
         //Creates random variables to rescale body by
-         float myRandomXScale = Random.Range(1f, 3f);
-         float myRandomYScale = Random.Range(1f, 3f);
-         float myRandomZScale = Random.Range(1f, 3f);
+         float myRandomXScale = Random.Range(2f, 3f);
+         float myRandomYScale = Random.Range(2f, 3f);
+         float myRandomZScale = Random.Range(2f, 3f);
 
          //Saves these to the creature data so they can be copied late if required
          creature.bodyDimensions.Add("X_Scale", myRandomXScale);
@@ -62,25 +62,86 @@ public class BodyManager : MonoBehaviour
             ConfigurableJoint newJoint = joint;
             newJoint.connectedBody = limbToAttach;
             //Sets the movement limits to limited in X,Y and Z directions
-            newJoint.xMotion = ConfigurableJointMotion.Free;
-            newJoint.yMotion = ConfigurableJointMotion.Free;
-            newJoint.zMotion = ConfigurableJointMotion.Free;
+
+            newJoint.xMotion = ConfigurableJointMotion.Locked;
+            newJoint.yMotion = ConfigurableJointMotion.Locked;
+            newJoint.zMotion = ConfigurableJointMotion.Locked;
+
+            newJoint.angularXMotion = ConfigurableJointMotion.Locked;
+            newJoint.angularYMotion = ConfigurableJointMotion.Locked;
+            newJoint.angularZMotion = ConfigurableJointMotion.Locked;
 
 
             newJoint.autoConfigureConnectedAnchor = true;
 
             //Adds the angular drives and dampers in X,Y and Z directions
             JointDrive Xdamper = newJoint.angularXDrive;
-            Xdamper.positionDamper = 5;
+            Xdamper.positionDamper = 20000;
             newJoint.angularXDrive = Xdamper;
             JointDrive Xdrive = newJoint.angularXDrive;
-            Xdrive.positionSpring = 150;
+            Xdrive.positionSpring = 20000;
             newJoint.angularXDrive = Xdrive;
             JointDrive YZdamper = newJoint.angularYZDrive;
-            YZdamper.positionDamper = 5;
+            YZdamper.positionDamper = 20000;
             newJoint.angularYZDrive = YZdamper;
             JointDrive YZdrive = newJoint.angularYZDrive;
-            YZdrive.positionSpring = 150;
+            YZdrive.positionSpring = 20000;
+            newJoint.angularYZDrive = YZdrive;
+
+            //Adds Direction Drives
+            JointDrive XStandarddrive = newJoint.xDrive;
+            XStandarddrive.positionSpring = 200000;
+            newJoint.xDrive = XStandarddrive;
+
+            JointDrive Ydrive = newJoint.yDrive;
+            Ydrive.positionSpring = 200000;
+            newJoint.yDrive = Ydrive;
+
+            JointDrive Zdrive = newJoint.zDrive;
+            Zdrive.positionSpring = 200000;
+            newJoint.zDrive = Zdrive;
+
+            //Adds angular limit springs in X,Y and Z directions
+            SoftJointLimitSpring Xlimit = newJoint.angularXLimitSpring;
+            Xlimit.spring = 20000;
+            newJoint.angularXLimitSpring = Xlimit;
+            SoftJointLimitSpring YZlimit = newJoint.angularYZLimitSpring;
+            YZlimit.spring = 20000;
+            newJoint.angularYZLimitSpring = YZlimit;
+
+            // Adds linear limit spring to the joint
+            SoftJointLimitSpring limit = newJoint.linearLimitSpring;
+            limit.spring = 20000;
+            newJoint.linearLimitSpring = limit;
+            return newJoint;
+
+        }
+        else
+        {
+            ConfigurableJoint newJoint = joint;
+            newJoint.connectedBody = limbToAttach;
+            newJoint.xMotion = ConfigurableJointMotion.Locked;
+            newJoint.yMotion = ConfigurableJointMotion.Locked;
+            newJoint.zMotion = ConfigurableJointMotion.Locked;
+
+            newJoint.angularXMotion = ConfigurableJointMotion.Locked;
+            newJoint.angularYMotion = ConfigurableJointMotion.Locked;
+            newJoint.angularZMotion = ConfigurableJointMotion.Locked;
+
+            newJoint.autoConfigureConnectedAnchor = true;
+
+            //Adds the angular drives and dampers in X,Y and Z directions
+            JointDrive Xdamper = newJoint.angularXDrive;
+            Xdamper.positionDamper = 20000;
+            newJoint.angularXDrive = Xdamper;
+            JointDrive Xdrive = newJoint.angularXDrive;
+            Xdrive.positionSpring = 20000;
+            newJoint.angularXDrive = Xdrive;
+            JointDrive YZdamper = newJoint.angularYZDrive;
+            YZdamper.positionDamper = 20000;
+            newJoint.angularYZDrive = YZdamper;
+            JointDrive YZdrive = newJoint.angularYZDrive;
+            YZdrive.positionSpring = 20000;
             newJoint.angularYZDrive = YZdrive;
 
             //Adds Direction Drives
@@ -98,67 +159,15 @@ public class BodyManager : MonoBehaviour
 
             //Adds angular limit springs in X,Y and Z directions
             SoftJointLimitSpring Xlimit = newJoint.angularXLimitSpring;
-            Xlimit.spring = 1000;
+            Xlimit.spring = 20000;
             newJoint.angularXLimitSpring = Xlimit;
             SoftJointLimitSpring YZlimit = newJoint.angularYZLimitSpring;
-            YZlimit.spring = 1000;
+            YZlimit.spring = 20000;
             newJoint.angularYZLimitSpring = YZlimit;
 
             // Adds linear limit spring to the joint
             SoftJointLimitSpring limit = newJoint.linearLimitSpring;
-            limit.spring = 1000;
-            newJoint.linearLimitSpring = limit;
-            return newJoint;
-
-        }
-        else
-        {
-            ConfigurableJoint newJoint = joint;
-            newJoint.connectedBody = limbToAttach;
-            newJoint.xMotion = ConfigurableJointMotion.Locked;
-            newJoint.yMotion = ConfigurableJointMotion.Locked;
-            newJoint.zMotion = ConfigurableJointMotion.Locked;
-
-            newJoint.autoConfigureConnectedAnchor = true;
-
-            //Adds the angular drives and dampers in X,Y and Z directions
-            JointDrive Xdamper = newJoint.angularXDrive;
-            Xdamper.positionDamper = 5;
-            newJoint.angularXDrive = Xdamper;
-            JointDrive Xdrive = newJoint.angularXDrive;
-            Xdrive.positionSpring = 150;
-            newJoint.angularXDrive = Xdrive;
-            JointDrive YZdamper = newJoint.angularYZDrive;
-            YZdamper.positionDamper = 5;
-            newJoint.angularYZDrive = YZdamper;
-            JointDrive YZdrive = newJoint.angularYZDrive;
-            YZdrive.positionSpring = 150;
-            newJoint.angularYZDrive = YZdrive;
-
-            //Adds Direction Drives
-            JointDrive XStandarddrive = newJoint.xDrive;
-            XStandarddrive.positionSpring = 150;
-            newJoint.xDrive = XStandarddrive;
-
-            JointDrive Ydrive = newJoint.yDrive;
-            Ydrive.positionSpring = 500;
-            newJoint.yDrive = Ydrive;
-
-            JointDrive Zdrive = newJoint.zDrive;
-            Zdrive.positionSpring = 150;
-            newJoint.zDrive = Zdrive;
-
-            //Adds angular limit springs in X,Y and Z directions
-            SoftJointLimitSpring Xlimit = newJoint.angularXLimitSpring;
-            Xlimit.spring = 150;
-            newJoint.angularXLimitSpring = Xlimit;
-            SoftJointLimitSpring YZlimit = newJoint.angularYZLimitSpring;
-            YZlimit.spring = 150;
-            newJoint.angularYZLimitSpring = YZlimit;
-
-            // Adds linear limit spring to the joint
-            SoftJointLimitSpring limit = newJoint.linearLimitSpring;
-            limit.spring = 150;
+            limit.spring = 20000;
             newJoint.linearLimitSpring = limit;
             return newJoint;
 

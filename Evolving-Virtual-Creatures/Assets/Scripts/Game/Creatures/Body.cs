@@ -13,6 +13,7 @@ public class Body : MonoBehaviour
 
     public Rigidbody bodyRigidbody;
 
+
     public static Body MakeRandomBody(Creature creature)
     {
 
@@ -20,7 +21,7 @@ public class Body : MonoBehaviour
 
         BodyManager.ScaleBodyRandomly(body.gameObject,creature);
         //newBody.isKinematic = true;
-        body.bodyRigidbody.mass = 2*body.gameObject.transform.localScale.x * body.gameObject.transform.localScale.y * body.gameObject.transform.localScale.z;
+        body.bodyRigidbody.mass = 3*body.gameObject.transform.localScale.x * body.gameObject.transform.localScale.y * body.gameObject.transform.localScale.z;
 
         return body;
     }
@@ -28,7 +29,8 @@ public class Body : MonoBehaviour
     public static Body MakeNewBaseBody(Creature creature)
     {
         GameObject baseBody = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        baseBody.GetComponent<Renderer>().material.color = new Color(0,255,0);
+        var cubeRenderer = baseBody.GetComponent<Renderer>();
+        cubeRenderer.material.color = Color.green;
         Body body = baseBody.AddComponent<Body>();
         //Sets the body at layer 8, to ensure it doesn't collide with other creatures
         baseBody.layer = 8;
@@ -87,7 +89,7 @@ public class Body : MonoBehaviour
         //Mutate if value is less than mutation rate, between a 1% and 20% chance
         if (newRandomX <= CurrentGameConfig.mutationRate)
         {
-            float newRandomXscale = Random.Range(1f, 2f);
+            float newRandomXscale = Random.Range(2f, 4f);
             Xscale = newRandomXscale;
         }
         else
@@ -108,7 +110,7 @@ public class Body : MonoBehaviour
         //Mutate if value is less than mutation rate, between a 1% and 20% chance
         if (newRandomY <= CurrentGameConfig.mutationRate)
         {
-            float newRandomYscale = Random.Range(1f, 2f);
+            float newRandomYscale = Random.Range(2f, 4f);
             Yscale = newRandomYscale;
         }
         else
@@ -129,7 +131,7 @@ public class Body : MonoBehaviour
         //Mutate if value is less than mutation rate, between a 1% and 20% chance
         if (newRandomZ <= CurrentGameConfig.mutationRate)
         {
-            float newRandomZscale = Random.Range(1f, 2f);
+            float newRandomZscale = Random.Range(2f, 4f);
             Zscale = newRandomZscale;
         }
         else

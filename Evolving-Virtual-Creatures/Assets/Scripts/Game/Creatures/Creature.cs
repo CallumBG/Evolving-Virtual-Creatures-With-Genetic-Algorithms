@@ -50,7 +50,7 @@ public class Creature : MonoBehaviour
         //Removes the joints of the last limb in each list
         LimbManager.RemoveEndJoints(newCreature);
         //Creates the network structure of the brain
-        int[] layers = { 8, 8, 8, 8, 8, 8, 8, 3 };
+        int[] layers = { 11, 15, 15, 15, 15, 15, 15, 3 };
         //Creates the brain based on the structure passed in
         newCreature.brain = new Brain(layers);
         return newCreature;
@@ -73,12 +73,10 @@ public class Creature : MonoBehaviour
             currentLimbSlotBeingEdited += 1;
 
         }
-        //Adds the joints of the body
-        BodyManager.addBodyJoints(newCreature.body, newCreature);
 
         int parent1LimbCount = parent1.limbSlot1Limbs.Count + parent1.limbSlot2Limbs.Count + parent1.limbSlot3Limbs.Count + parent1.limbSlot4Limbs.Count;
         int parent2LimbCount = parent2.limbSlot1Limbs.Count + parent2.limbSlot2Limbs.Count + parent2.limbSlot3Limbs.Count + parent2.limbSlot4Limbs.Count;
-        int averageParentLimbCount = (parent1LimbCount + parent2LimbCount)/2;
+        int averageParentLimbCount = (parent1LimbCount + parent2LimbCount) / 2;
         newCreature.maxLimbCount = Random.Range(averageParentLimbCount - 3, averageParentLimbCount + 3);
 
         //Creature goes through 4 potential mutations (one for each limb)
@@ -86,11 +84,11 @@ public class Creature : MonoBehaviour
         while (currentLimbSlotBeingMutated <= 4)
         {
             int mutationCheck = Random.Range(0, 100);
-            if(mutationCheck < CurrentGameConfig.mutationRate && (newCreature.limbSlot1Limbs.Count + newCreature.limbSlot2Limbs.Count + newCreature.limbSlot3Limbs.Count + newCreature.limbSlot4Limbs.Count) < 20)
+            if (mutationCheck < CurrentGameConfig.mutationRate && (newCreature.limbSlot1Limbs.Count + newCreature.limbSlot2Limbs.Count + newCreature.limbSlot3Limbs.Count + newCreature.limbSlot4Limbs.Count) < 20)
             {
                 Limb.MakeNewRandomLimb(newCreature, true);
             }
-            else if(mutationCheck < CurrentGameConfig.mutationRate * 2)
+            else if (mutationCheck < CurrentGameConfig.mutationRate * 2)
             {
                 LimbManager.RemoveEndLimb(newCreature);
             }
@@ -100,11 +98,14 @@ public class Creature : MonoBehaviour
 
 
         //Trim number of limbs so it is less than max
-        while(newCreature.currentLimbCount > newCreature.maxLimbCount)
+        while (newCreature.currentLimbCount > newCreature.maxLimbCount)
         {
             LimbManager.RemoveEndLimb(newCreature);
             currentLimbSlotBeingMutated -= 1;
         }
+
+        //Adds the joints of the body
+        BodyManager.addBodyJoints(newCreature.body, newCreature);
 
 
         //Removes the joints of the last limb in each list
@@ -135,38 +136,80 @@ public class Creature : MonoBehaviour
     public void UseBrain()
     {
         //Moves the limb when not grounded with little force, subject to change
-        float torqueFactor = 10f;
+        float torqueFactor = 50f;
         //Moves the limb when grounded with lots of force, subject to change
-        float torqueFactorGrounded = 100000f;
+        float torqueFactorGrounded = 1000f;
         //Adds torque to each axis of the limb based on the brain outputs
         foreach (Limb limb in this.limbSlot1Limbs)
         {
-            float[] inputs = BrainInputs.GetBrainInputs(limb);
-            float[] outputs = this.brain.FeedForward(inputs);
-            if (limb.isGrounded == true)
+            if (limb.LimbRigidbody != null)
             {
+                float[] inputs = BrainInputs.GetBrainInputs(limb);
+                float[] outputs = this.brain.FeedForward(inputs);
+                if (limb.isGrounded == true)
+                {
 
-                limb.LimbRigidbody.AddRelativeTorque(outputs[0] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[1] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass);
-            }
-            else
-            {
+                    limb.LimbRigidbody.AddRelativeTorque(outputs[0] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[1] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass);
+                }
+                else
+                {
 
-                limb.LimbRigidbody.AddRelativeTorque(outputs[0] - 0.25f * torqueFactor * limb.LimbRigidbody.mass, outputs[1] - 0.25f * torqueFactor * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactor * limb.LimbRigidbody.mass);
+                    limb.LimbRigidbody.AddRelativeTorque(outputs[0] - 0.25f * torqueFactor * limb.LimbRigidbody.mass, outputs[1] - 0.25f * torqueFactor * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactor * limb.LimbRigidbody.mass);
+                }
             }
         }
         foreach (Limb limb in this.limbSlot2Limbs)
         {
-            float[] inputs = BrainInputs.GetBrainInputs(limb);
-            float[] outputs = this.brain.FeedForward(inputs);
-            if (limb.isGrounded == true)
+            if (limb.LimbRigidbody != null)
             {
+                float[] inputs = BrainInputs.GetBrainInputs(limb);
+                float[] outputs = this.brain.FeedForward(inputs);
+                if (limb.isGrounded == true)
+                {
 
-                limb.LimbRigidbody.AddRelativeTorque(outputs[0] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[1] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass);
+                    limb.LimbRigidbody.AddRelativeTorque(outputs[0] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[1] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass);
+                }
+                else
+                {
+
+                    limb.LimbRigidbody.AddRelativeTorque(outputs[0] - 0.25f * torqueFactor * limb.LimbRigidbody.mass, outputs[1] - 0.25f * torqueFactor * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactor * limb.LimbRigidbody.mass);
+                }
             }
-            else
+        }
+        foreach (Limb limb in this.limbSlot3Limbs)
+        {
+            if (limb.LimbRigidbody != null)
             {
+                float[] inputs = BrainInputs.GetBrainInputs(limb);
+                float[] outputs = this.brain.FeedForward(inputs);
+                if (limb.isGrounded == true)
+                {
 
-                limb.LimbRigidbody.AddRelativeTorque(outputs[0] - 0.25f * torqueFactor * limb.LimbRigidbody.mass, outputs[1] - 0.25f * torqueFactor * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactor * limb.LimbRigidbody.mass);
+                    limb.LimbRigidbody.AddRelativeTorque(outputs[0] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[1] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass);
+                }
+                else
+                {
+
+                    limb.LimbRigidbody.AddRelativeTorque(outputs[0] - 0.25f * torqueFactor * limb.LimbRigidbody.mass, outputs[1] - 0.25f * torqueFactor * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactor * limb.LimbRigidbody.mass);
+                }
+            }
+        }
+        foreach (Limb limb in this.limbSlot4Limbs)
+        {
+            if (limb.LimbRigidbody != null)
+            {
+                float[] inputs = BrainInputs.GetBrainInputs(limb);
+                float[] outputs = this.brain.FeedForward(inputs);
+                if (limb.isGrounded == true)
+                {
+
+                    limb.LimbRigidbody.AddRelativeTorque(outputs[0] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[1] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass);
+                }
+                else
+                {
+
+                    limb.LimbRigidbody.AddRelativeTorque(outputs[0] - 0.25f * torqueFactor * limb.LimbRigidbody.mass, outputs[1] - 0.25f * torqueFactor * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactor * limb.LimbRigidbody.mass);
+                }
             }
         }
     }

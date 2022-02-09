@@ -74,14 +74,9 @@ public class LimbManager : MonoBehaviour
         }
         if(limbSlotToRemoveFrom.Count != 0)
         {
-            List<Limb> tempLimbList = new List<Limb>();
-            Destroy(limbSlotToRemoveFrom.Last().gameObject);
-            for(int i = 0; i < limbSlotToRemoveFrom.Count - 1; i++)
-            {
-                tempLimbList.Add(limbSlotToRemoveFrom[i]);
-            }
-            limbSlotToRemoveFrom.Clear();
-            limbSlotToRemoveFrom = tempLimbList;
+            Limb limbToDestroy = limbSlotToRemoveFrom.Last();
+            limbSlotToRemoveFrom.Remove(limbSlotToRemoveFrom.Last());
+            Destroy(limbToDestroy.gameObject);
         }
 
 

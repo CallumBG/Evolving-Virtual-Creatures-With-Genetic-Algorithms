@@ -101,13 +101,21 @@ public class Limb : MonoBehaviour
         }
         int limbAttachmentType;
 
-        if(LimbSlotToAddTo == 1 || LimbSlotToAddTo == 2)
+        if(LimbSlotToAddTo == 1)
         {
-            limbAttachmentType = UnityEngine.Random.Range(1, 10);
+            limbAttachmentType = UnityEngine.Random.Range(1, 5);
+        }
+        else if(LimbSlotToAddTo == 2)
+        {
+            limbAttachmentType = UnityEngine.Random.Range(5, 10);
+        }
+        else if(LimbSlotToAddTo == 3)
+        {
+            limbAttachmentType = UnityEngine.Random.Range(10, 14);
         }
         else
         {
-            limbAttachmentType = UnityEngine.Random.Range(10, 19);
+            limbAttachmentType = UnityEngine.Random.Range(14, 19);
         }
 
         if (currentLimbSlot.Count == 0)
