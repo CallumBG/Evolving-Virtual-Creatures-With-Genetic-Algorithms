@@ -2,7 +2,7 @@
 
 A university project that has since been improved upon, the idea is to use an artificial intelligence algorithm, a genetic algorithm in this case, to create creatures that are adapated to their environment, in this case we are selecting for ability to move in their environment.
 
-Creatures are initially created, with a randomly sized body and limbs which attach in a random direction as shown:
+Creatures are initially created, with a randomly sized body and limbs which attach at a random place in a random direction, here is an example:
 
 ![image](https://user-images.githubusercontent.com/67014866/173051050-c7986080-1fc8-49e1-bcf0-b7a90f5646cf.png)
 
