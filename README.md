@@ -12,7 +12,7 @@ Then a function is used to select 2 "parent" creatures based on their performanc
 
 These are used to make the next generation of creatures, along with mutation this allows for the creatures performance to improve over time.
 
-Here is an example of 200 generations being simulated:
+Here is a much sped up example of 200 generations being simulated:
 
 These are some examples of motions the creatures developed to effectively move in their environment:
 
