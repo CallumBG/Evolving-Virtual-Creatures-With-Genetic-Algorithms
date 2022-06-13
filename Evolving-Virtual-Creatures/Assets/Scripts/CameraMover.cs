@@ -17,6 +17,14 @@ public class CameraMover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKey(KeyCode.C))
+        {
+            transform.position += Vector3.up * movementSpeed * Time.deltaTime;
+        }
+        else if (Input.GetKey(KeyCode.X))
+        {
+            transform.position += -Vector3.up * movementSpeed  * Time.deltaTime;
+        }
         
 
         //Rotation

@@ -62,19 +62,19 @@ public class Limb : MonoBehaviour
     {
         //Randomise where limb will be added if there is not too many limbs
         int LimbSlotToAddTo;
-        if (creature.limbSlot1Limbs.Count + creature.limbSlot2Limbs.Count + creature.limbSlot3Limbs.Count + creature.limbSlot4Limbs.Count >= creature.maxLimbCount && isMutation == false)
+        if (creature.limbSlot1Limbs.Count + creature.limbSlot2Limbs.Count + creature.limbSlot3Limbs.Count + creature.limbSlot4Limbs.Count == creature.maxLimbCount && isMutation == false)
         {
             return;
         }
         else
         {
-            LimbSlotToAddTo = UnityEngine.Random.Range(1, 5);
+            LimbSlotToAddTo = UnityEngine.Random.Range(1, 3);
         }
 
         Limb newLimb = MakeNewBaseLimb(creature);
         LimbManager.ScaleLimbRandomly(newLimb.gameObject, creature, newLimb);
 
-        newLimb.LimbRigidbody.mass =  newLimb.gameObject.transform.localScale.x * newLimb.gameObject.transform.localScale.y * newLimb.gameObject.transform.localScale.z;
+        newLimb.LimbRigidbody.mass = newLimb.gameObject.transform.localScale.x * newLimb.gameObject.transform.localScale.y * newLimb.gameObject.transform.localScale.z;
 
         //Test to see setup with no gravity
         //LimbRigidbody.isKinematic = true;
@@ -88,12 +88,6 @@ public class Limb : MonoBehaviour
             case 2:
                 currentLimbSlot = creature.limbSlot2Limbs;
                 break;
-            case 3:
-                currentLimbSlot = creature.limbSlot3Limbs;
-                break;
-            case 4:
-                currentLimbSlot = creature.limbSlot4Limbs;
-                break;
             default:
                 Debug.Log("Limb slot not in range 1-4");
                 break;
@@ -101,21 +95,13 @@ public class Limb : MonoBehaviour
         }
         int limbAttachmentType;
 
-        if(LimbSlotToAddTo == 1)
+        if (LimbSlotToAddTo == 1)
         {
-            limbAttachmentType = UnityEngine.Random.Range(1, 5);
-        }
-        else if(LimbSlotToAddTo == 2)
-        {
-            limbAttachmentType = UnityEngine.Random.Range(5, 10);
-        }
-        else if(LimbSlotToAddTo == 3)
-        {
-            limbAttachmentType = UnityEngine.Random.Range(10, 14);
+            limbAttachmentType = UnityEngine.Random.Range(1, 10);
         }
         else
         {
-            limbAttachmentType = UnityEngine.Random.Range(14, 19);
+            limbAttachmentType = UnityEngine.Random.Range(10, 19);
         }
 
         if (currentLimbSlot.Count == 0)
@@ -129,9 +115,10 @@ public class Limb : MonoBehaviour
             limbAttachmentType = currentLimbSlot.Last().potentialLimbs[randomAttachType];
             newLimb.LimbAttachType = limbAttachmentType;
             newLimb.potentialLimbs = LimbAttacher.randomLimbSetup(newLimb.gameObject, currentLimbSlot.Last().LimbRigidbody, limbAttachmentType);
-            LimbManager.addLimbJoint(creature, newLimb.LimbRigidbody, currentLimbSlot.Last().joint);
+            LimbManager.addLimbJoint(creature, newLimb.LimbRigidbody, currentLimbSlot.Last().LimbRigidbody, currentLimbSlot.Last().joint);
         }
         currentLimbSlot.Add(newLimb);
+        creature.currentLimbCount += 1;
     }
 
 
@@ -140,31 +127,64 @@ public class Limb : MonoBehaviour
         List<Limb> limbSlotToAddTo = creature.limbSlot1Limbs;
         List<Limb> parent1ListToInherit = parent1.limbSlot1Limbs;
         List<Limb> parent2ListToInherit = parent2.limbSlot1Limbs;
-        switch (limbSlotToEdit)
+        int newRandom = UnityEngine.Random.Range(1, 5);
+        if (limbSlotToEdit == 1)
         {
-            case 1:
-                parent1ListToInherit = parent1.limbSlot1Limbs;
-                parent2ListToInherit = parent2.limbSlot1Limbs;
-                limbSlotToAddTo = creature.limbSlot1Limbs;
-                break;
-            case 2:
-                parent1ListToInherit = parent1.limbSlot2Limbs;
-                parent2ListToInherit = parent2.limbSlot2Limbs;
-                limbSlotToAddTo = creature.limbSlot2Limbs;
-                break;
-            case 3:
-                parent1ListToInherit = parent1.limbSlot3Limbs;
-                parent2ListToInherit = parent2.limbSlot3Limbs;
-                limbSlotToAddTo = creature.limbSlot3Limbs;
-                break;
-            case 4:
-                parent1ListToInherit = parent1.limbSlot4Limbs;
-                parent2ListToInherit = parent2.limbSlot4Limbs;
-                limbSlotToAddTo = creature.limbSlot4Limbs;
-                break;
-            default:
-                break;
+            switch (newRandom)
+            {
+                case 1:
+                    parent1ListToInherit = parent1.limbSlot1Limbs;
+                    parent2ListToInherit = parent2.limbSlot1Limbs;
+                    limbSlotToAddTo = creature.limbSlot1Limbs;
+                    break;
+                case 2:
+                    parent1ListToInherit = parent1.limbSlot1Limbs;
+                    parent2ListToInherit = parent2.limbSlot2Limbs;
+                    limbSlotToAddTo = creature.limbSlot1Limbs;
+                    break;
+                case 3:
+                    parent1ListToInherit = parent1.limbSlot2Limbs;
+                    parent2ListToInherit = parent2.limbSlot1Limbs;
+                    limbSlotToAddTo = creature.limbSlot1Limbs;
+                    break;
+                case 4:
+                    parent1ListToInherit = parent1.limbSlot2Limbs;
+                    parent2ListToInherit = parent2.limbSlot2Limbs;
+                    limbSlotToAddTo = creature.limbSlot1Limbs;
+                    break;
+                default:
+                    break;
+            }
         }
+        else
+        {
+            switch (newRandom)
+            {
+                case 1:
+                    parent1ListToInherit = parent1.limbSlot1Limbs;
+                    parent2ListToInherit = parent2.limbSlot1Limbs;
+                    limbSlotToAddTo = creature.limbSlot2Limbs;
+                    break;
+                case 2:
+                    parent1ListToInherit = parent1.limbSlot1Limbs;
+                    parent2ListToInherit = parent2.limbSlot2Limbs;
+                    limbSlotToAddTo = creature.limbSlot2Limbs;
+                    break;
+                case 3:
+                    parent1ListToInherit = parent1.limbSlot2Limbs;
+                    parent2ListToInherit = parent2.limbSlot1Limbs;
+                    limbSlotToAddTo = creature.limbSlot2Limbs;
+                    break;
+                case 4:
+                    parent1ListToInherit = parent1.limbSlot2Limbs;
+                    parent2ListToInherit = parent2.limbSlot2Limbs;
+                    limbSlotToAddTo = creature.limbSlot2Limbs;
+                    break;
+                default:
+                    break;
+            }
+        }
+
 
         int newLimbListSize = Mathf.Max(parent1ListToInherit.Count, parent2ListToInherit.Count);
 
@@ -178,11 +198,12 @@ public class Limb : MonoBehaviour
 
             if (limbSlotToAddTo.Count == 0)
             {
-                //TODO
-                //Add Mutation
+
+
 
                 if (parentToChooseFrom == 0)
                 {
+
                     try
                     {
                         newLimb.LimbAttachType = parent1ListToInherit[limbSlotToAddTo.Count].LimbAttachType;
@@ -203,12 +224,20 @@ public class Limb : MonoBehaviour
                         newLimb.LimbAttachType = parent1ListToInherit[limbSlotToAddTo.Count].LimbAttachType;
                     }
                 }
+                /*if (limbSlotToEdit == 2)
+                {
+                    while (newLimb.LimbAttachType == creature.limbSlot1Limbs[0].LimbAttachType)
+                    {
+                        int newRandomAttachType = UnityEngine.Random.Range(0, 19);
+                        newLimb.LimbAttachType = newRandomAttachType;
+                    }
+                }*/
                 newLimb.potentialLimbs = LimbAttacher.randomLimbSetup(newLimb.gameObject, creature.body.bodyRigidbody, newLimb.LimbAttachType, true);
             }
             else
             {
-                //TODO
-                //Add mutation
+
+
 
                 if (parentToChooseFrom == 0)
                 {
@@ -216,13 +245,13 @@ public class Limb : MonoBehaviour
                     {
                         newLimb.LimbAttachType = parent1ListToInherit[limbSlotToAddTo.Count].LimbAttachType;
                         newLimb.potentialLimbs = LimbAttacher.randomLimbSetup(newLimb.gameObject, limbSlotToAddTo.Last().LimbRigidbody, newLimb.LimbAttachType, true);
-                        LimbManager.addLimbJoint(creature, newLimb.LimbRigidbody, limbSlotToAddTo.Last().joint);
+                        LimbManager.addLimbJoint(creature, newLimb.LimbRigidbody, limbSlotToAddTo.Last().LimbRigidbody, limbSlotToAddTo.Last().joint);
                     }
                     catch
                     {
                         newLimb.LimbAttachType = parent2ListToInherit[limbSlotToAddTo.Count].LimbAttachType;
                         newLimb.potentialLimbs = LimbAttacher.randomLimbSetup(newLimb.gameObject, limbSlotToAddTo.Last().LimbRigidbody, newLimb.LimbAttachType, true);
-                        LimbManager.addLimbJoint(creature, newLimb.LimbRigidbody, limbSlotToAddTo.Last().joint);
+                        LimbManager.addLimbJoint(creature, newLimb.LimbRigidbody, limbSlotToAddTo.Last().LimbRigidbody, limbSlotToAddTo.Last().joint);
                     }
                 }
                 else
@@ -231,17 +260,19 @@ public class Limb : MonoBehaviour
                     {
                         newLimb.LimbAttachType = parent2ListToInherit[limbSlotToAddTo.Count].LimbAttachType;
                         newLimb.potentialLimbs = LimbAttacher.randomLimbSetup(newLimb.gameObject, limbSlotToAddTo.Last().LimbRigidbody, newLimb.LimbAttachType, true);
-                        LimbManager.addLimbJoint(creature, newLimb.LimbRigidbody, limbSlotToAddTo.Last().joint);
+                        LimbManager.addLimbJoint(creature, newLimb.LimbRigidbody, limbSlotToAddTo.Last().LimbRigidbody, limbSlotToAddTo.Last().joint);
                     }
                     catch
                     {
                         newLimb.LimbAttachType = parent1ListToInherit[limbSlotToAddTo.Count].LimbAttachType;
                         newLimb.potentialLimbs = LimbAttacher.randomLimbSetup(newLimb.gameObject, limbSlotToAddTo.Last().LimbRigidbody, newLimb.LimbAttachType, true);
-                        LimbManager.addLimbJoint(creature, newLimb.LimbRigidbody, limbSlotToAddTo.Last().joint);
+                        LimbManager.addLimbJoint(creature, newLimb.LimbRigidbody, limbSlotToAddTo.Last().LimbRigidbody, limbSlotToAddTo.Last().joint);
                     }
                 }
+
             }
             limbSlotToAddTo.Add(newLimb);
+            creature.currentLimbCount += 1;
 
         }
 
@@ -265,7 +296,7 @@ public class Limb : MonoBehaviour
         //Mutate if value is less than mutation rate, between a 1% and 20% chance
         if (newRandomX <= CurrentGameConfig.mutationRate)
         {
-            float newRandomXscale = UnityEngine.Random.Range(0.25f, 0.5f);
+            float newRandomXscale = UnityEngine.Random.Range(0.5f, 1f);
             Xscale = newRandomXscale;
         }
         else
@@ -300,7 +331,7 @@ public class Limb : MonoBehaviour
         //Mutate if value is less than mutation rate, between a 1% and 20% chance
         if (newRandomY <= CurrentGameConfig.mutationRate)
         {
-            float newRandomYscale = UnityEngine.Random.Range(0.25f, 0.5f);
+            float newRandomYscale = UnityEngine.Random.Range(0.5f, 1f);
             Yscale = newRandomYscale;
         }
         else
@@ -335,7 +366,7 @@ public class Limb : MonoBehaviour
         //Mutate if value is less than mutation rate, between a 1% and 20% chance
         if (newRandomZ <= CurrentGameConfig.mutationRate)
         {
-            float newRandomZscale = UnityEngine.Random.Range(0.25f, 0.5f);
+            float newRandomZscale = UnityEngine.Random.Range(0.5f, 1f);
             Zscale = newRandomZscale;
         }
         else
@@ -367,7 +398,7 @@ public class Limb : MonoBehaviour
         }
 
         //Set the size of the limb using the values decided above
-        limb.transform.localScale += new Vector3(Xscale, Yscale, Zscale);
+        limb.transform.localScale = new Vector3(Xscale, Yscale, Zscale);
         Limb limbComponent = limb.GetComponent<Limb>();
         limbComponent.limbDimensions.Add("X_Scale", Xscale);
         limbComponent.limbDimensions.Add("Y_Scale", Yscale);

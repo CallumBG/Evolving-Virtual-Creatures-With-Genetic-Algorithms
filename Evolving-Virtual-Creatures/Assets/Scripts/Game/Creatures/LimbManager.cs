@@ -29,13 +29,13 @@ public class LimbManager : MonoBehaviour
     public static void ScaleLimbRandomly(GameObject baseLimb, Creature creature, Limb limb)
     {
 
-        float myRandomXScale = Random.Range(0.25f, 0.5f);
-        float myRandomYScale = Random.Range(0.25f, 0.5f);
-        float myRandomZScale = Random.Range(0.25f, 0.5f);
+        float myRandomXScale = Random.Range(0.5f, 1);
+        float myRandomYScale = Random.Range(0.5f, 1f);
+        float myRandomZScale = Random.Range(0.5f, 1f);
         limb.limbDimensions.Add("X_Scale", myRandomXScale);
         limb.limbDimensions.Add("Y_Scale", myRandomYScale);
         limb.limbDimensions.Add("Z_Scale", myRandomZScale);
-        baseLimb.transform.localScale += new Vector3(myRandomXScale, myRandomYScale, myRandomZScale);
+        baseLimb.transform.localScale = new Vector3(myRandomXScale, myRandomYScale, myRandomZScale);
 
     }
 
@@ -53,7 +53,7 @@ public class LimbManager : MonoBehaviour
     public static void RemoveEndLimb(Creature creature)
     {
         List<Limb> limbSlotToRemoveFrom = creature.limbSlot1Limbs;
-        int randomLimbSlotToRemoveFrom = Random.Range(1, 5);
+        int randomLimbSlotToRemoveFrom = Random.Range(1, 3);
         switch (randomLimbSlotToRemoveFrom)
         {
             case 1:
@@ -61,12 +61,6 @@ public class LimbManager : MonoBehaviour
                 break;
             case 2:
                 limbSlotToRemoveFrom = creature.limbSlot2Limbs;
-                break;
-            case 3:
-                limbSlotToRemoveFrom = creature.limbSlot3Limbs;
-                break;
-            case 4:
-                limbSlotToRemoveFrom = creature.limbSlot4Limbs;
                 break;
             default:
                 break;
@@ -77,24 +71,46 @@ public class LimbManager : MonoBehaviour
             Limb limbToDestroy = limbSlotToRemoveFrom.Last();
             limbSlotToRemoveFrom.Remove(limbSlotToRemoveFrom.Last());
             Destroy(limbToDestroy.gameObject);
+            creature.currentLimbCount -= 1;
         }
 
 
     }
 
-    public static ConfigurableJoint addLimbJoint(Creature creature, Rigidbody limbToAttach, ConfigurableJoint joint, ConfigurableJoint oldJoint = null)
+    public static ConfigurableJoint addLimbJoint(Creature creature, Rigidbody limbToAttach, Rigidbody previousBody, ConfigurableJoint joint, ConfigurableJoint oldJoint = null)
     {
         if (oldJoint == null)
         {
             ConfigurableJoint newJoint = joint;
             newJoint.connectedBody = limbToAttach;
             //Sets the movement limits to limited in X,Y and Z directions
-            newJoint.xMotion = ConfigurableJointMotion.Free;
-            newJoint.yMotion = ConfigurableJointMotion.Free;
-            newJoint.zMotion = ConfigurableJointMotion.Free;
+            newJoint.xMotion = ConfigurableJointMotion.Limited;
+            newJoint.yMotion = ConfigurableJointMotion.Limited;
+            newJoint.zMotion = ConfigurableJointMotion.Limited;
 
 
             newJoint.autoConfigureConnectedAnchor = true;
+
+            newJoint.angularXMotion = ConfigurableJointMotion.Limited;
+            newJoint.angularYMotion = ConfigurableJointMotion.Limited;
+            newJoint.angularZMotion = ConfigurableJointMotion.Limited;
+
+            //Add Angular limits
+            SoftJointLimit newHighAngularXLimit = newJoint.highAngularXLimit;
+            newHighAngularXLimit.limit = -177;
+            newJoint.highAngularXLimit = newHighAngularXLimit;
+
+            SoftJointLimit newLowAngularXLimit = newJoint.highAngularXLimit;
+            newLowAngularXLimit.limit = 177;
+            newJoint.highAngularXLimit = newLowAngularXLimit;
+
+            SoftJointLimit newAngularZLimit = newJoint.angularZLimit;
+            newAngularZLimit.limit = 177;
+            newJoint.angularZLimit = newAngularZLimit;
+
+            SoftJointLimit newAngularYLimit = newJoint.angularYLimit;
+            newAngularYLimit.limit = 177;
+            newJoint.angularYLimit = newAngularYLimit;
 
             //Adds the angular drives and dampers in X,Y and Z directions
             JointDrive Xdamper = newJoint.angularXDrive;
@@ -142,11 +158,34 @@ public class LimbManager : MonoBehaviour
         {
             ConfigurableJoint newJoint = joint;
             newJoint.connectedBody = limbToAttach;
-            newJoint.xMotion = ConfigurableJointMotion.Free;
-            newJoint.yMotion = ConfigurableJointMotion.Free;
-            newJoint.zMotion = ConfigurableJointMotion.Free;
 
             newJoint.autoConfigureConnectedAnchor = true;
+
+            //Sets the movement limits to limited in X,Y and Z directions
+            newJoint.xMotion = ConfigurableJointMotion.Limited;
+            newJoint.yMotion = ConfigurableJointMotion.Limited;
+            newJoint.zMotion = ConfigurableJointMotion.Limited;
+
+            newJoint.angularXMotion = ConfigurableJointMotion.Limited;
+            newJoint.angularYMotion = ConfigurableJointMotion.Limited;
+            newJoint.angularZMotion = ConfigurableJointMotion.Limited;
+
+            //Add Angular limits
+            SoftJointLimit newHighAngularXLimit = newJoint.highAngularXLimit;
+            newHighAngularXLimit.limit = -177;
+            newJoint.highAngularXLimit = newHighAngularXLimit;
+
+            SoftJointLimit newLowAngularXLimit = newJoint.highAngularXLimit;
+            newLowAngularXLimit.limit = 177;
+            newJoint.highAngularXLimit = newLowAngularXLimit;
+
+            SoftJointLimit newAngularZLimit = newJoint.angularZLimit;
+            newAngularZLimit.limit = 177;
+            newJoint.angularZLimit = newAngularZLimit;
+
+            SoftJointLimit newAngularYLimit = newJoint.angularYLimit;
+            newAngularYLimit.limit = 177;
+            newJoint.angularYLimit = newAngularYLimit;
 
             //Adds the angular drives and dampers in X,Y and Z directions
             JointDrive Xdamper = newJoint.angularXDrive;

@@ -11,7 +11,7 @@ public class Creature : MonoBehaviour
 
     public int currentLimbCount = 0;
 
-    public int maxLimbCount = 8;
+    public int maxLimbCount = 4;
     public Brain brain;
 
     //public int rating;
@@ -41,6 +41,9 @@ public class Creature : MonoBehaviour
         Creature newCreature = baseCreature.AddComponent<Creature>();
         //add body of creature
         newCreature.body = Body.MakeRandomBody(newCreature);
+        //Add random number of starting limbs (3-12)
+        int randomLimbNumber = Random.Range(3,13);
+        newCreature.maxLimbCount = randomLimbNumber;
         //Adds a random set of limbs
         CreatureManager.AddInitialLimbs(newCreature);
         //Adds the joints of the body
@@ -67,21 +70,46 @@ public class Creature : MonoBehaviour
         //Make limbs using attributes from the parents limbs
         int currentLimbSlotBeingEdited = 1;
 
-        while (currentLimbSlotBeingEdited <= 4)
+        //Limb mutation
+
+        int parent1LimbCount = parent1.limbSlot1Limbs.Count + parent1.limbSlot2Limbs.Count;
+        int parent2LimbCount = parent2.limbSlot1Limbs.Count + parent2.limbSlot2Limbs.Count;
+        int roundUpOrDownRandom = Random.Range(0,2);
+        int averageParentLimbCount = 0;
+        if(roundUpOrDownRandom == 0)
+        {
+            averageParentLimbCount = (parent1LimbCount + parent2LimbCount) / 2;
+        }
+        else
+        {
+            averageParentLimbCount = (parent1LimbCount + parent2LimbCount + 2) / 2;
+        }
+
+        if(averageParentLimbCount <= 2)
+        {
+            newCreature.maxLimbCount = Random.Range(averageParentLimbCount, averageParentLimbCount + 2);
+        }
+        else
+        {
+            newCreature.maxLimbCount = Random.Range(averageParentLimbCount - 2, averageParentLimbCount + 3);
+        }
+
+        while (currentLimbSlotBeingEdited <= 2)
         {
             Limb.MakeLimb(newCreature, parent1, parent2, currentLimbSlotBeingEdited);
             currentLimbSlotBeingEdited += 1;
 
         }
 
-        int parent1LimbCount = parent1.limbSlot1Limbs.Count + parent1.limbSlot2Limbs.Count + parent1.limbSlot3Limbs.Count + parent1.limbSlot4Limbs.Count;
-        int parent2LimbCount = parent2.limbSlot1Limbs.Count + parent2.limbSlot2Limbs.Count + parent2.limbSlot3Limbs.Count + parent2.limbSlot4Limbs.Count;
-        int averageParentLimbCount = (parent1LimbCount + parent2LimbCount) / 2;
-        newCreature.maxLimbCount = Random.Range(averageParentLimbCount - 3, averageParentLimbCount + 3);
+        //Trim number of limbs so it is less than max
+        while (newCreature.currentLimbCount > newCreature.maxLimbCount)
+        {
+            LimbManager.RemoveEndLimb(newCreature);
+        }
 
         //Creature goes through 4 potential mutations (one for each limb)
         int currentLimbSlotBeingMutated = 1;
-        while (currentLimbSlotBeingMutated <= 4)
+        while (currentLimbSlotBeingMutated <= 2)
         {
             int mutationCheck = Random.Range(0, 100);
             if (mutationCheck < CurrentGameConfig.mutationRate && (newCreature.limbSlot1Limbs.Count + newCreature.limbSlot2Limbs.Count + newCreature.limbSlot3Limbs.Count + newCreature.limbSlot4Limbs.Count) < 20)
@@ -95,15 +123,6 @@ public class Creature : MonoBehaviour
             currentLimbSlotBeingMutated += 1;
 
         }
-
-
-        //Trim number of limbs so it is less than max
-        while (newCreature.currentLimbCount > newCreature.maxLimbCount)
-        {
-            LimbManager.RemoveEndLimb(newCreature);
-            currentLimbSlotBeingMutated -= 1;
-        }
-
         //Adds the joints of the body
         BodyManager.addBodyJoints(newCreature.body, newCreature);
 
@@ -127,6 +146,7 @@ public class Creature : MonoBehaviour
             newCreature.brain = new Brain(parent2.brain);
             newCreature.brain.Mutate();
         }
+
         return newCreature;
     }
 
@@ -136,9 +156,10 @@ public class Creature : MonoBehaviour
     public void UseBrain()
     {
         //Moves the limb when not grounded with little force, subject to change
-        float torqueFactor = 50f;
+        float torqueFactor = 20f;
         //Moves the limb when grounded with lots of force, subject to change
-        float torqueFactorGrounded = 1000f;
+        float torqueFactorGrounded = 500f;
+        float yTorqueFactorGrounded = 100f;
         //Adds torque to each axis of the limb based on the brain outputs
         foreach (Limb limb in this.limbSlot1Limbs)
         {
@@ -149,7 +170,7 @@ public class Creature : MonoBehaviour
                 if (limb.isGrounded == true)
                 {
 
-                    limb.LimbRigidbody.AddRelativeTorque(outputs[0] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[1] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass);
+                    limb.LimbRigidbody.AddRelativeTorque(outputs[0] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[1] - 0.25f * yTorqueFactorGrounded * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass);
                 }
                 else
                 {
@@ -167,7 +188,7 @@ public class Creature : MonoBehaviour
                 if (limb.isGrounded == true)
                 {
 
-                    limb.LimbRigidbody.AddRelativeTorque(outputs[0] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[1] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass);
+                    limb.LimbRigidbody.AddTorque(outputs[0] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass, outputs[1] - 0.25f * torqueFactor * limb.LimbRigidbody.mass, outputs[2] - 0.25f * torqueFactorGrounded * limb.LimbRigidbody.mass);
                 }
                 else
                 {

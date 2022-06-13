@@ -18,6 +18,7 @@ public class CreatureManager : MonoBehaviour
         newCopy.limbSlot4Limbs = LimbManager.copyLimbs(creature.limbSlot4Limbs, newCopy);
         //copy brain
         newCopy.brain = new Brain(creature.brain);
+        newCopy.currentLimbCount = newCopy.limbSlot1Limbs.Count + newCopy.limbSlot2Limbs.Count;
 
         return newCopy;
     }
@@ -28,7 +29,6 @@ public class CreatureManager : MonoBehaviour
         while (creature.currentLimbCount < creature.maxLimbCount)
         {
             Limb.MakeNewRandomLimb(creature);
-            creature.currentLimbCount += 1;
         }
     }
 

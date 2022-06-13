@@ -8,16 +8,16 @@ public class BodyManager : MonoBehaviour
     public static void ScaleBodyRandomly(GameObject body, Creature creature)
     {
         //Creates random variables to rescale body by
-         float myRandomXScale = Random.Range(2f, 3f);
-         float myRandomYScale = Random.Range(2f, 3f);
-         float myRandomZScale = Random.Range(2f, 3f);
+         float myRandomXScale = Random.Range(1f, 2f);
+         float myRandomYScale = Random.Range(1f, 2f);
+         float myRandomZScale = Random.Range(1f, 2f);
 
          //Saves these to the creature data so they can be copied late if required
          creature.bodyDimensions.Add("X_Scale", myRandomXScale);
          creature.bodyDimensions.Add("Y_Scale", myRandomYScale);
          creature.bodyDimensions.Add("Z_Scale", myRandomZScale);
         
-        body.transform.localScale += new Vector3(myRandomXScale, myRandomYScale, myRandomZScale);
+        body.transform.localScale = new Vector3(myRandomXScale, myRandomYScale, myRandomZScale);
     }
 
     public static void addBodyJoints(Body body, Creature creature, Body oldBody = null)
@@ -173,5 +173,35 @@ public class BodyManager : MonoBehaviour
 
         }
         
+    }
+
+    public static void ScaleBodyAfterAddingLimbs(Creature creature)
+    {
+        int currentLimbCount = creature.limbSlot1Limbs.Count + creature.limbSlot2Limbs.Count;
+        //Saves current body dimensions
+         float myRandomXScale = creature.body.transform.localScale.x;
+         float myRandomYScale = creature.body.transform.localScale.y;
+         float myRandomZScale = creature.body.transform.localScale.z;
+
+        //checks if creatures body dimensions are unreasonable based on the number of limbs if so, a new random reasonable dimension is chosen
+         if(creature.body.transform.localScale.x < currentLimbCount/3 || creature.body.transform.localScale.x > currentLimbCount/2)
+         {
+            myRandomXScale = Random.Range(currentLimbCount/3, currentLimbCount/2);
+         }
+         else if(creature.body.transform.localScale.y < currentLimbCount/3 || creature.body.transform.localScale.y > currentLimbCount/2)
+         {
+            myRandomYScale = Random.Range(currentLimbCount/3, currentLimbCount/2);
+         }
+         else if(creature.body.transform.localScale.z < currentLimbCount/3 || creature.body.transform.localScale.z > currentLimbCount/2)
+         {
+            myRandomZScale = Random.Range(currentLimbCount/3, currentLimbCount/2);
+         }
+
+        //Saves these to the creature data so they can be copied late if required
+         creature.bodyDimensions.Add("X_Scale", myRandomXScale);
+         creature.bodyDimensions.Add("Y_Scale", myRandomYScale);
+         creature.bodyDimensions.Add("Z_Scale", myRandomZScale);
+        
+        creature.body.transform.localScale = new Vector3(myRandomXScale, myRandomYScale, myRandomZScale);
     }
 }

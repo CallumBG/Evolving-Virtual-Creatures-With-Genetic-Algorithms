@@ -13,7 +13,6 @@ public class Body : MonoBehaviour
 
     public Rigidbody bodyRigidbody;
 
-
     public static Body MakeRandomBody(Creature creature)
     {
 
@@ -89,7 +88,7 @@ public class Body : MonoBehaviour
         //Mutate if value is less than mutation rate, between a 1% and 20% chance
         if (newRandomX <= CurrentGameConfig.mutationRate)
         {
-            float newRandomXscale = Random.Range(2f, 4f);
+            float newRandomXscale = Random.Range(1f, 2f);
             Xscale = newRandomXscale;
         }
         else
@@ -110,7 +109,7 @@ public class Body : MonoBehaviour
         //Mutate if value is less than mutation rate, between a 1% and 20% chance
         if (newRandomY <= CurrentGameConfig.mutationRate)
         {
-            float newRandomYscale = Random.Range(2f, 4f);
+            float newRandomYscale = Random.Range(1f, 2f);
             Yscale = newRandomYscale;
         }
         else
@@ -131,7 +130,7 @@ public class Body : MonoBehaviour
         //Mutate if value is less than mutation rate, between a 1% and 20% chance
         if (newRandomZ <= CurrentGameConfig.mutationRate)
         {
-            float newRandomZscale = Random.Range(2f, 4f);
+            float newRandomZscale = Random.Range(1f, 2f);
             Zscale = newRandomZscale;
         }
         else
