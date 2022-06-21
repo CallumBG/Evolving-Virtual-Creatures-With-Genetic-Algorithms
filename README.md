@@ -18,6 +18,9 @@ https://user-images.githubusercontent.com/67014866/174808358-46ec2f4f-2bbe-4d8d-
 
 Here is a 10x speed example of the same simulation after 150 generations, as you can see the creatures have evolved to move much further:
 
-These are some examples of motions the creatures developed to effectively move in their environment:
+https://user-images.githubusercontent.com/67014866/174809475-ea5798ae-5acb-42c3-ad73-86c6fa1b6c5d.mp4
 
+This is a real time example of a later generation where the creatures have developed to more effectively move in their environment:
+
+https://user-images.githubusercontent.com/67014866/174812677-975f9b7d-8117-41cb-9897-6cf95f682831.mp4
 
