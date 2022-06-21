@@ -16,6 +16,7 @@ public class LimbAttacher : MonoBehaviour
         //back side - bottom left 
         if (RandomNumber == 1)
         {
+            
 
             float xTransform = bodyToAttach.transform.position.x + (bodyToAttach.transform.localScale.x / 2) + (baseLimb.transform.localScale.x / 2);
             float yTransform = bodyToAttach.transform.position.y + (baseLimb.transform.localScale.y / 2) - (bodyToAttach.transform.localScale.y / 2);

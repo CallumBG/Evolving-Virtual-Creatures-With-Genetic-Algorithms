@@ -130,6 +130,8 @@ public class Limb : MonoBehaviour
         int newRandom = UnityEngine.Random.Range(1, 5);
         if (limbSlotToEdit == 1)
         {
+            limbSlotToAddTo = creature.limbSlot1Limbs;
+            /*
             switch (newRandom)
             {
                 case 1:
@@ -154,10 +156,14 @@ public class Limb : MonoBehaviour
                     break;
                 default:
                     break;
-            }
+            }*/
         }
         else
         {
+            parent1ListToInherit = parent1.limbSlot2Limbs;
+            parent2ListToInherit = parent2.limbSlot2Limbs;
+            limbSlotToAddTo = creature.limbSlot2Limbs;
+            /*
             switch (newRandom)
             {
                 case 1:
@@ -183,6 +189,7 @@ public class Limb : MonoBehaviour
                 default:
                     break;
             }
+            */
         }
 
 
